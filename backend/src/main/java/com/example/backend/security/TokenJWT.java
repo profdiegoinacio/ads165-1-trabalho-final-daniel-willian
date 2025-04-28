@@ -17,16 +17,16 @@ public class TokenJWT {
 
     @PostConstruct
     public void init() {
-
         this.chaveSecreta = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
-    public String gerarToken(String email) {
+    public String gerarToken(String email, String role) {
         Date agora = new Date();
         Date expiracao = new Date(agora.getTime() + EXPIRACAO_TOKEN_MS);
 
         return Jwts.builder()
                 .setSubject(email)
+                .claim("role", role)  // Adicionando o role no token
                 .setIssuedAt(agora)
                 .setExpiration(expiracao)
                 .signWith(chaveSecreta)

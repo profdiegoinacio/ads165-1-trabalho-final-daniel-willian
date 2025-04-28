@@ -22,14 +22,14 @@ public class AuthService {
 
     public String login(String email, String senha) {
 
-        Admin admin = adminRepository.findByEmail(email).filter(a -> a.getSenha().equals(senha)).orElse(null);
-        if (admin != null) {
+
+        Admin admin = adminRepository.findByEmail(email).orElse(null);
+        if (admin != null && admin.getSenha().equals(senha)) {
             return tokenJWT.gerarToken(admin.getEmail(), "admin");
         }
 
-
-        Usuario usuario = usuarioRepository.findByEmail(email).filter(u -> u.getSenha().equals(senha)).orElse(null);
-        if (usuario != null) {
+        Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
+        if (usuario != null && usuario.getSenha().equals(senha)) {
             return tokenJWT.gerarToken(usuario.getEmail(), "usuario");
         }
 

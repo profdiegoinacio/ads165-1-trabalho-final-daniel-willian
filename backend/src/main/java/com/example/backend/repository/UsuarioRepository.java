@@ -2,10 +2,12 @@ package com.example.backend.repository;
 
 import com.example.backend.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.web.server.CoWebFilterChain;
+import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+
     boolean existsByEmail(String email);
 
-    CoWebFilterChain findByEmail(String email);
+    Optional<Usuario> findByEmail(String email);
+
 }
