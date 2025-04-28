@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
-import com.example.backend.Reclamacao;
-import com.example.backend.Usuario;
+import com.example.backend.model.Reclamacao;
+import com.example.backend.model.Usuario;
 import com.example.backend.repository.ReclamacaoRepository;
 import com.example.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.example.backend.dto;
+package com.example.backend.model;
 
 public class Login {
     private String email;
@@ -6,7 +6,7 @@ public class Login {
 
     public Login() {}
 
-    public LoginRequest(String email, String senha) {
+    public Login(String email, String senha) {
         this.email = email;
         this.senha = senha;
     }
