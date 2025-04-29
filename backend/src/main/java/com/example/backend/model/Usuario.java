@@ -1,11 +1,9 @@
 package com.example.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
@@ -18,6 +16,8 @@ public class Usuario {
     private String telefone;
     private String senha;
 
+    // Construtor vazio
+    public Usuario() {}
 
     public Usuario(Long id, String nome, String endereco, String email, String telefone, String senha) {
         this.id = id;
