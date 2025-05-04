@@ -1,25 +1,29 @@
-// app/layout.tsx
 import './globals.css';
-import Link from 'next/link';
+import type { Metadata } from 'next';
 
-export const metadata = {
-    title: 'Lista de Produtos',
-    description: 'Aplicação simples com uma lista de produtos'
+export const metadata: Metadata = {
+    title: 'Sistema de Reclamações',
+    description: 'Sistema para registro e acompanhamento de reclamações',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+                                       children,
+                                   }: {
+    children: React.ReactNode;
+}) {
     return (
         <html lang="pt-BR">
         <body>
-        <header style={{ padding: '10px', backgroundColor: '#f7f7f7' }}>
-            <nav>
-                <Link href="/" style={{ marginRight: '10px' }}>Início</Link>
-                <Link href="/produtos">Produtos</Link>
-            </nav>
+        <header className="bg-blue-700 text-white p-4">
+            <div className="container mx-auto">
+                <h1 className="text-xl font-bold">Sistema de Reclamações</h1>
+            </div>
         </header>
-        <main style={{ padding: '20px' }}>{children}</main>
-        <footer style={{ textAlign: 'center', padding: '10px', marginTop: '20px', backgroundColor: '#f7f7f7' }}>
-            © 2024 Lista de Produtos
+        <main>{children}</main>
+        <footer className="bg-gray-100 p-4 text-center text-gray-600 text-sm mt-8">
+            <div className="container mx-auto">
+                © {new Date().getFullYear()} Sistema de Reclamações
+            </div>
         </footer>
         </body>
         </html>
