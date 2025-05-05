@@ -1,11 +1,15 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+## Projeto de reclamações sobre falta de água
 
-First, run the development server:
+Primeiro, carregar o gradle e rodar no backend/main/java/BackendApplication a class BackendApplication para subir o Backend.
+#É necessário estar com java 17 ou superior instalado.
+
+Segundo, rode o npm run dev para iniciar o frontend :
+#É necessário rodar no terminal o npm install react-icons e npm install axios;
 
 ```bash
-npm run dev
+npm run dev #Também encontrado no package.json
 # or
 yarn dev
 # or
@@ -14,23 +18,86 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra [http://localhost:3000](http://localhost:3000) no navegador para ver a página carregada.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A estrutura de pastas do backend consiste em diretórios separados para manter uma certa organuização e ficar fácil de se achar:
+Controller
+Model
+Repository
+Security
+Service
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+O projeto usa conexão com banco de dados H2 por se tratar de algo simples e fácil de configurar para um projeto de apresentação, as conexões com o banco são mantidas em resources/ApplicationProperties.
 
-## Learn More
+Endereços da API e exemplos de uso:
 
-To learn more about Next.js, take a look at the following resources:
+POST Criar Usuarios: http://localhost:8080/usuarios
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+{
+"nome": "Willian",
+"endereco": "Av brasil, 123",
+"email": "willian@upf.com",
+"telefone": "54981427121",
+"senha": "1234567"
+}
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+GET Listar Usuarios: http://localhost:8080/usuarios
 
-## Deploy on Vercel
+PUT Atualizar Usuarios: http://localhost:8080/usuarios/1
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+{
+"nome": "Daniel",
+"endereco": "Av brasil, 123",
+"email": "daniel@upf.com",
+"telefone": "54981427120",
+"senha": "123456"
+}
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+DELETE Deletar usuario: http://localhost:8080/usuarios/1
+
+#RECLAMAÇÕES
+
+POST Inserir Reclamação: http://localhost:8080/reclamacoes
+
+{
+"endereco": "Av brasil, 111",
+"detalhes": "Falta de agua ha 3 horas",
+"usuario": {
+"id": 1
+ }
+}
+
+GET Listar Reclamações: http://localhost:8080/reclamacoes
+
+PUT Atualizar Reclamação: http://localhost:8080/reclamacoes/1
+
+RESOLVIDO
+
+#ADMIN
+
+POST Criar Admins: http://localhost:8080/admins
+
+{
+"nome": "Daniel ALBUQUERQUE",
+"endereco": "Av brasil, 123",
+"email": "ALBUQUERQUE@upf.com",
+"telefone": "54981427122",
+"senha": "admin"
+}
+
+GET Listar Admins: http://localhost:8080/admins
+
+PUT Atualizar Admins: http://localhost:8080/admins/1
+
+{
+"id": 1,
+"nome": "ALBUQUERQUE",
+"email": "ALBUQUERQUE@upf.com",
+"senha": "admin"
+}
+
+DELETE Deletar Admins: http://localhost:8080/admins/1
+
+
+
+
