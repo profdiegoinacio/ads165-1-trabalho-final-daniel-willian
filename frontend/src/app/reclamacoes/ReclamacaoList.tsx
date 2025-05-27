@@ -31,7 +31,7 @@ export default function ReclamacaoList() {
         const fetchReclamacoes = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('http://localhost:8080/reclamacoes', {
+                const response = await fetch('http://172.30.49.176:8080/reclamacoes', {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',

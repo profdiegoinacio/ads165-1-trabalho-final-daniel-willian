@@ -1,6 +1,8 @@
 package com.example.backend.model;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "usuario")
@@ -11,10 +13,23 @@ public class Usuario {
     private Long id;
 
     private String nome;
+
     private String endereco;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String telefone;
+
+    @Column(nullable = false)
     private String senha;
+
+    private boolean enabled = true;
+
+    @ElementCollection(fetch = FetchType.EAGER) // Para papéis simples como Strings
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "usuario_id"))
+    @Column(name = "role")
+    private Set<String> roles = new HashSet<>(); // Ex: "ROLE_USER", "ROLE_ADMIN"
 
     // Construtor vazio
     public Usuario() {}
@@ -26,6 +41,7 @@ public class Usuario {
         this.email = email;
         this.telefone = telefone;
         this.senha = senha;
+        this.roles = roles;
     }
 
 
