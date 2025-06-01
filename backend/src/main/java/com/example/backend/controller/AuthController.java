@@ -22,4 +22,9 @@ public class AuthController {
         String token = authService.login(email, senha);
         return ResponseEntity.ok().body(token);
     }
+
+    @GetMapping("/protegido")
+    public ResponseEntity<String> protegido() {
+        return ResponseEntity.ok("Acesso autorizado com token válido!");
+    }
 }
