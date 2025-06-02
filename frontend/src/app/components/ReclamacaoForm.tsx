@@ -26,7 +26,7 @@ const ReclamacaoForm: React.FC = () => {
                 usuario: { id: form.usuarioId },
             };
 
-            await axios.post('http://172.30.49.176:8080/reclamacoes', reclamacaoPayload);
+            await axios.post('http://localhost:8080/reclamacoes', reclamacaoPayload);
             alert('Reclamação enviada com sucesso!');
             setForm({ cep: '', endereco: '', bairro: '', numero: '', detalhes: '', usuarioId: '' });
         } catch (error) {
