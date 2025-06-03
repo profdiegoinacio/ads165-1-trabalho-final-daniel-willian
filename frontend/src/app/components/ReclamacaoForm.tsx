@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const ReclamacaoForm: React.FC = () => {
     const [form, setForm] = useState({
@@ -8,8 +9,33 @@ const ReclamacaoForm: React.FC = () => {
         bairro: '',
         numero: '',
         detalhes: '',
-        usuarioId: '', // Colocar o id do usuario por enquanto
+        usuarioId: '',
     });
+
+    const router = useRouter();
+
+    useEffect(() => {
+        const email = localStorage.getItem('email');
+
+        if (!email) {
+            alert('Usuário não logado');
+            router.push('/login');
+            return;
+        }
+
+        axios.get(`http://localhost:8080/usuarios/email/${email}`)
+            .then(response => {
+                setForm(prev => ({
+                    ...prev,
+                    usuarioId: response.data.id
+                }));
+            })
+            .catch(error => {
+                console.error('Erro ao buscar usuário:', error);
+                alert('Erro ao carregar dados do usuário.');
+                router.push('/login');
+            });
+    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,9 +52,14 @@ const ReclamacaoForm: React.FC = () => {
                 usuario: { id: form.usuarioId },
             };
 
-            await axios.post('http://localhost:8080/reclamacoes', reclamacaoPayload);
+            await axios.post('http://localhost:8080/reclamacoes', reclamacaoPayload, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
             alert('Reclamação enviada com sucesso!');
-            setForm({ cep: '', endereco: '', bairro: '', numero: '', detalhes: '', usuarioId: '' });
+            setForm({ cep: '', endereco: '', bairro: '', numero: '', detalhes: '', usuarioId: form.usuarioId });
         } catch (error) {
             alert('Erro ao enviar reclamação');
             console.error(error);
@@ -39,15 +70,7 @@ const ReclamacaoForm: React.FC = () => {
         <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-4 space-y-4">
             <h2 className="text-xl font-semibold">Insira as informações para criar seu relato.</h2>
 
-            <input
-                type="text"
-                name="usuarioId"
-                placeholder="ID do Usuário"
-                value={form.usuarioId}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-                required
-            />
+            {/* Campo de usuarioId removido, pois agora é automático */}
 
             <input
                 type="text"

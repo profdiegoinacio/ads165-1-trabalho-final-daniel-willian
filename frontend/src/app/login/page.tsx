@@ -2,21 +2,49 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import axios from 'axios';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Apenas simula autenticação
-        if (email && senha) {
-            // Aqui você pode salvar no localStorage ou context, se quiser simular login
-            router.push('/reclamacoes');
-        } else {
+        if (!email || !senha) {
             alert('Preencha todos os campos.');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            // Faz a requisição para o backend para autenticar
+            const response = await axios.post('http://localhost:8080/auth/login', {
+                email,
+                senha
+            });
+
+            // Salva o token e email no localStorage
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('email', email);
+
+            alert('Login realizado com sucesso!');
+            router.push('/reclamacoes');
+        } catch (error: any) {
+            console.error('Erro no login:', error);
+
+            if (error.response?.status === 401) {
+                alert('Email ou senha incorretos.');
+            } else if (error.response?.status === 404) {
+                alert('Usuário não encontrado.');
+            } else {
+                alert('Erro no servidor. Tente novamente mais tarde.');
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -34,6 +62,7 @@ export default function LoginPage() {
                             placeholder="Digite seu email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            disabled={loading}
                         />
                     </div>
                     <div>
@@ -44,6 +73,7 @@ export default function LoginPage() {
                             placeholder="Digite sua senha"
                             value={senha}
                             onChange={(e) => setSenha(e.target.value)}
+                            disabled={loading}
                         />
                     </div>
                     <div className="text-right">
@@ -51,9 +81,10 @@ export default function LoginPage() {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white font-bold py-3 rounded"
+                        className="w-full bg-blue-600 text-white font-bold py-3 rounded disabled:bg-blue-400"
+                        disabled={loading}
                     >
-                        Login
+                        {loading ? 'Fazendo login...' : 'Login'}
                     </button>
                 </form>
 

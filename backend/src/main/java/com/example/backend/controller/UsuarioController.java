@@ -34,6 +34,12 @@ public class UsuarioController {
         return userService.atualizarUsuario(id, usuarioAtualizado);
     }
 
+    @GetMapping("/email/{email}")
+    public Usuario buscarPorEmail(@PathVariable String email) {
+        return userService.buscarPorEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
+
     @DeleteMapping("/{id}")
     public void deletarUsuario(@PathVariable Long id) {
         userService.deletarUsuario(id);
