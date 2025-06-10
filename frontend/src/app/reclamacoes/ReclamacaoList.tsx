@@ -1,6 +1,8 @@
 'use client';
+import useAuthProtection from '@/app/hooks/useAuthProtection';
 import { useEffect, useState } from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
+import api from '@/app/api/axios';
 
 interface Reclamacao {
     id: number;
@@ -23,6 +25,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function ReclamacaoList() {
+    useAuthProtection();
     const [reclamacoes, setReclamacoes] = useState<Reclamacao[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -31,24 +34,21 @@ export default function ReclamacaoList() {
         const fetchReclamacoes = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('http://localhost:8080/reclamacoes', {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                });
 
-                if (!response.ok) {
-                    throw new Error(`Erro ao buscar dados: ${response.status}`);
-                }
+                // SUBSTITUÍDO: trocamos o fetch pelo nosso 'api.get'
+                const response = await api.get('/reclamacoes');
 
-                const data = await response.json();
-                setReclamacoes(data);
+                // O Axios já nos entrega os dados em formato JSON em `response.data`
+                // E também já trata erros (se a resposta não for 2xx, ele vai para o catch)
+                // Por isso, as linhas abaixo não são mais necessárias:
+                // if (!response.ok) { ... }
+                // const data = await response.json();
+
+                setReclamacoes(response.data);
                 setError(null);
-            } catch (err) {
+            } catch (err: any) { // Tipando o 'err' como 'any' para acessar 'message'
                 console.error('Erro ao buscar reclamações:', err);
-                setError('Não foi possível carregar as reclamações. Verifique se o servidor está rodando.');
+                setError(err.message || 'Não foi possível carregar as reclamações.');
             } finally {
                 setLoading(false);
             }
@@ -61,7 +61,7 @@ export default function ReclamacaoList() {
         try {
             const d = new Date(data);
             return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-        } catch (error) {
+        } catch (erro) {
             return 'Data inválida';
         }
     };

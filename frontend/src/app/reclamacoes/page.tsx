@@ -1,8 +1,11 @@
 'use client';
+
+import useAuthProtection from '@/app/hooks/useAuthProtection';
 import Link from 'next/link';
 import ReclamacaoList from './ReclamacaoList';
 
 export default function ReclamacoesPage() {
+    useAuthProtection();
     return (
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-6">

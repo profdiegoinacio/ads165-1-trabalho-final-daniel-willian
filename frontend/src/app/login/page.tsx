@@ -1,48 +1,41 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
+import { useAuth } from '@/contexts/AuthContext'; // 1. Importar o hook useAuth
 
 export default function LoginPage() {
+    // 2. Obter a função de login do nosso contexto
+    const { login } = useAuth();
+
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
+    // 3. (Opcional, mas recomendado) Estado para exibir erros na tela em vez de alerts
+    const [error, setError] = useState<string | null>(null);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null); // Limpa erros anteriores
 
         if (!email || !senha) {
-            alert('Preencha todos os campos.');
+            setError('Preencha todos os campos.');
             return;
         }
 
         setLoading(true);
 
         try {
-            // Faz a requisição para o backend para autenticar
-            const response = await axios.post('http://localhost:8080/auth/login', {
-                email,
-                senha
-            });
+            // 4. A mágica acontece aqui! Apenas chame a função login do contexto.
+            // Toda a lógica de API, armazenamento e redirect está nela.
+            await login(email, senha);
 
-            // Salva o token e email no localStorage
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('email', email);
+            // O redirecionamento será feito automaticamente pelo AuthContext após o sucesso.
+            // Não precisamos mais do router.push('/reclamacoes') aqui.
 
-            alert('Login realizado com sucesso!');
-            router.push('/reclamacoes');
         } catch (error: any) {
+            // O erro lançado pelo AuthContext será capturado aqui
             console.error('Erro no login:', error);
-
-            if (error.response?.status === 401) {
-                alert('Email ou senha incorretos.');
-            } else if (error.response?.status === 404) {
-                alert('Usuário não encontrado.');
-            } else {
-                alert('Erro no servidor. Tente novamente mais tarde.');
-            }
+            setError(error.message || 'Erro no servidor. Tente novamente mais tarde.');
         } finally {
             setLoading(false);
         }
@@ -54,6 +47,9 @@ export default function LoginPage() {
                 <h1 className="text-2xl font-bold">Olá!</h1>
                 <p className="text-gray-600">Faça seu login para continuar.</p>
                 <form onSubmit={handleLogin} className="space-y-4">
+                    {/* 5. Exibindo a mensagem de erro na tela */}
+                    {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
                     <div>
                         <label className="block mb-1">E-mail</label>
                         <input
