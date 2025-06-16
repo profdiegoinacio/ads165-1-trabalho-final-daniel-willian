@@ -1,5 +1,4 @@
 'use client';
-import useAuthProtection from '@/app/hooks/useAuthProtection';
 import { useEffect, useState } from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import api from '@/app/api/axios';
@@ -25,7 +24,6 @@ const statusColors: Record<string, string> = {
 };
 
 export default function ReclamacaoList() {
-    useAuthProtection();
     const [reclamacoes, setReclamacoes] = useState<Reclamacao[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -35,6 +33,10 @@ export default function ReclamacaoList() {
             try {
                 setLoading(true);
 
+                // --- LINHA DE TESTE ---
+                // @ts-ignore
+                console.log(`[ReclamacaoList GET] Usando a instância de Axios com ID: ${api.myCustomId}`);
+                // --- FIM DO TESTE ---
                 // SUBSTITUÍDO: trocamos o fetch pelo nosso 'api.get'
                 const response = await api.get('/reclamacoes');
 
